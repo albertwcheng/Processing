@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>HTML5 Demo: Web Socket</title>
+</head>
+<body onmouseup="console.log('mouseup');">
+
+
+<script>
+// let's invite Firefox to the party.
+if (window.MozWebSocket) {
+  window.WebSocket = window.MozWebSocket;
+}
+
+conn = {};
+
+function openConnection(valueToSend) {
+  console.log("trying to open connection");
+  // uses global 'conn' object
+  if (conn.readyState === undefined || conn.readyState > 1) {
+  	 console.log("trying to open connection:2");
+    conn = new WebSocket('ws://50.136.30.53:10002');  
+    console.log("trying to open connection:3");  
+    //conn.close();
+    conn.onopen = function () {
+    	
+      //state.className = 'success';
+      //state.innerHTML = 'Socket open';
+       console.log('socket open');
+    };
+
+    conn.onmessage = function (event) {
+       console.log(event.data);
+     /* var message = event.data; //JSON.parse(event.data);
+      if (!(/^\d+$/).test(message)) {
+        log.innerHTML = '<li class="them">' + message.replace(/[<>&]/g, function (m) { return entities[m]; }) + '</li>' + log.innerHTML;
+      } else {
+        //connected.innerHTML = message;
+      }*/
+    };
+    
+    conn.onclose = function (event) {
+     // state.className = 'fail';
+     // state.innerHTML = 'Socket closed';
+     console.log("socket closed");
+    };
+  }
+}
+
+
+if (window.WebSocket === undefined) {
+ // state.innerHTML = 'Sockets not supported';
+ // state.className = 'fail';
+} else {
+  /*state.onclick = function () {
+    if (conn.readyState !== 1) {
+      conn.close();
+      setTimeout(function () {
+        openConnection();
+      }, 250);
+    }
+ };*/
+  
+
+ // if we're connected
+
+
+
+  console.log("open connection");
+  openConnection('helloserver');  
+}
+
+function submitForm(valueToSend){
+  if (conn.readyState === 1) {
+      //conn.send(JSON.stringify(chat.value));
+      conn.send("<"+valueToSend+">");//;JSON.stringify(valueToSend));
+  }else{
+  	alert("not ready");	
+  }
+	
+}
+
+
+
+
+
+
+state12=0;
+
+function toggleOn12(){
+  if (conn.readyState === 1) {
+      
+      if(state12==1){
+     	 conn.send('<12:lo>');
+     	 state12=0;
+     	 document.getElementById("lightOnOff").value="Light Off";
+      }else{
+      	conn.send('<12:hi>');
+      	state12=1;
+      	document.getElementById("lightOnOff").value="Light On";
+      }
+  }else{
+  	alert("not ready");	
+  }
+	
+}
+
+</script>
+<form>
+<table>
+<tr><td><input type="button" value="Open Grip" ontouchstart="submitForm('11:hi')" onmousedown="submitForm('11:hi');" onmouseup="submitForm('11:lo');" ></input></td><td><input type="button" value="Close Grip" onmousedown="submitForm('10:hi');" ontouchstart="submitForm('10:hi');" onmouseup="submitForm('10:lo');"></input></td></tr>
+
+<tr><td><input type="button" value="AC M3" onmousedown="submitForm('8:hi');"  ontouchstart="submitForm('8:hi');"onmouseup="submitForm('8:lo');"></input>
+</td><td><input type="button" value="C M3" onmousedown="submitForm('9:hi');" ontouchstart="submitForm('9:hi');"onmouseup="submitForm('9:lo');"></input>
+</td></tr>
+
+
+<tr><td><input type="button" value="AC M2" onmousedown="submitForm('7:hi');" ontouchstart="submitForm('7:hi');" onmouseup="submitForm('7:lo');"></input>
+
+</td><td><input type="button" value="C M2" onmousedown="submitForm('6:hi');"  ontouchstart="submitForm('6:hi');"onmouseup="submitForm('6:lo');"></input>
+
+
+</td></tr>
+
+<tr><td><input type="button" value="AC M1" onmousedown="submitForm('5:hi');"  ontouchstart="submitForm('5:hi');" onmouseup="submitForm('5:lo');"></input>
+
+
+</td><td><input type="button" value="C M1" onmousedown="submitForm('4:hi');"  ontouchstart="submitForm('4:hi');"onmouseup="submitForm('4:lo');"></input>
+
+
+
+</td></tr>
+
+<tr><td><input type="button" value="LEFT" onmousedown="submitForm('2:hi');" ontouchstart="submitForm('2:hi');" onmouseup="submitForm('2:lo');"></input></td><td><input type="button" value="RIGHT" onmousedown="submitForm('3:hi');" ontouchstart="submitForm('3:hi');" onmouseup="submitForm('3:lo');"></input>
+</td><td><input type="button" id="lightOnOff" value="Light Off" onclick="toggleOn12();"></input>
+</form></td></tr>
+
+
+</table>
+
+<img src="OWIArmSchematic/OWISchematic.jpg" width="100%"/>
+
+</body>
+</html>
